@@ -24,7 +24,7 @@ async def whatsapp_webhook(request: Request):
     response = openai.chat.completions.create(
         model="gpt-35-turbo",
         messages=[
-            {"role": "system", "content": "You are an expert that give concise but brief answers, Answer should be in bullet points and should not exceed 50 words"},
+            {"role": "system", "content": "you must give answers in bullet points and should not exceed 50 words"},
             {"role": "user", "content": user_message}
         ],
             max_tokens = 50
