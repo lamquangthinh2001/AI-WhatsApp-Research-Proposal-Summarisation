@@ -1,13 +1,19 @@
 from fastapi import FastAPI, Request, Form
+from fastapi.responses import PlainTextResponse
+
 from twilio.twiml.messaging_response import MessagingResponse
-import openai
+from openai import AzureOpenAI
 import os
 
 app = FastAPI()
 
-openai.api_key = os.getenv("AZURE_OPENAI_API_KEY")
-openai.api_base = "https://thinh-m2ej7j6c-westeurope.openai.azure.com/"
-openai.api_version = "19/10/2024"  # Adjust according to your version
+
+
+openai = AzureOpenAI(
+    api_key="af03a0d3abe7436cb18ced1b5b7d2f8f",  
+    api_version="2024-02-01",
+    azure_endpoint = "https://thinh-m2ej7j6c-westeurope.openai.azure.com/"
+    )
 
 @app.post("/webhook")
 async def whatsapp_webhook(request: Request):
@@ -15,16 +21,20 @@ async def whatsapp_webhook(request: Request):
     user_message = body.get('Body')
 
     # Generate response using Azure OpenAI
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=user_message,
-        max_tokens=150
+    response = openai.chat.completions.create(
+        model="gpt-35-turbo",
+        messages=[
+            {"role": "system", "content": "You are an expert that give concise but brief answers, Answer should be in bullet points and should not exceed 50 words"},
+            {"role": "user", "content": user_message}
+        ],
+            max_tokens = 50
     )
-
-    reply = response.choices[0].text.strip()
+    reply = response.choices[0].message.content.strip()
 
     # Create a Twilio MessagingResponse to send the reply back
     twilio_response = MessagingResponse()
     twilio_response.message(reply)
 
-    return str(twilio_response)
+    return PlainTextResponse(str(twilio_response), media_type="application/xml")
+
+
