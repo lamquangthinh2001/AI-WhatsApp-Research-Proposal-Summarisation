@@ -1,0 +1,7 @@
+credentials.py
+
+venv/
+
+data/
+
+__pycache__/
