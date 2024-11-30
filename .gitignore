@@ -9,3 +9,6 @@ __pycache__/
 *.mp4
 *.webm
 *.pdf
+
+ngrok_twilio_instruction.docx
+project_overview.docx
