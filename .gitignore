@@ -5,3 +5,7 @@ venv/
 data/
 
 __pycache__/
+
+*.mp4
+*.webm
+*.pdf
